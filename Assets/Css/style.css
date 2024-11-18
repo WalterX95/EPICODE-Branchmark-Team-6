@@ -7,6 +7,7 @@ body {
   background-size: cover;
   color: white;
   font-family: "Roboto", sans-serif;
+  font-weight: 300;
 }
 
 main,
@@ -28,35 +29,44 @@ header {
 #title {
   font-weight: normal;
   font-size: 5em;
-  width: 70%;
   line-height: 0.8em;
+  margin-top: 10px;
 }
 
 #instructionsTitle {
   color: #d20094;
+  line-height: 1px;
 }
 
 #description {
-  width: 70%;
+  width: 80%;
 }
 
 #instructionList {
   margin: 50px 0;
 }
 
+#instructionList li {
+    line-height: 1.5em;
+}
+
 #proceed {
   margin-top: 5em;
   width: 100%;
-  position: relative;
 }
 
-#proceed input {
+input[type='checkbox'] {
   cursor: pointer;
-  width: 20px;
+  font: inherit;
+  width: 1.5em;
+  height: 1.5em;
+  color: transparent;
+  border: 10px solid black;
 }
 
 #proceed button {
   float: right;
+  cursor: pointer;
   width: 12em;
   height: 3em;
   margin-right: 5em;
@@ -64,14 +74,8 @@ header {
   font-weight: bold;
   border: none;
   background-color: #00ffff;
-  box-shadow: 2px 2px 10px #00ffff, -2px -2px 10px #00ffff;
+  box-shadow: 3px 3px 1.2em #00ffff, -3px -3px 1.2em #00ffff;
 }
-
-#errorProceded {
-   color:red;
-   visibility: hidden;
-}
-
-.isDisplay {
-   visibility: visible !important;
+footer {
+    height: 10vh;
 }
