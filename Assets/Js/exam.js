@@ -174,22 +174,28 @@ init();
 let flagStateRandom = true;
 let randomNumber = 0;
 let numberQuestion = 1;
-
+const arraySubmitAnswers = [];
 
 function randomQuestion() {
-  flagStateRandom = flagStateRandom ? randomNumber = Math.floor(Math.random() * questions.length) : false;
-  flagStateRandom = randomNumber;
+  flagStateRandom = flagStateRandom ? randomNumber = Math.floor((Math.random() * questions.length) + 0) : false;
+  //flagStateRandom = randomNumber;
+  console.log(flagStateRandom);
   return flagStateRandom;
 }
 
+randomQuestion();
+
 const theQuestion = () => {
-  flagStateRandom = false;
-  const questionRand = randomNumber;
+  //PROVA
+ // randomQuestion();
+  const questionHTML = document.getElementById("question");
+  questionHTML.innerText = questions[randomNumber].question;
   const questionContaier = document.getElementById("quiz-container");
-  const incorrect_answers = questions[questionRand].incorrect_answers;
-  const correct_answer = questions[questionRand].correct_answer;
+  const incorrect_answers = questions[randomNumber].incorrect_answers;
+  const correct_answer = questions[randomNumber].correct_answer;
   incorrect_answers.push(correct_answer);
-  incorrect_answers.sort(() => Math.floor(Math.random() * incorrect_answers.length));
+  arraySubmitAnswers.push(randomNumber);
+  incorrect_answers.sort(() => Math.floor(Math.random() - 0.5));
   console.log(incorrect_answers);
 
   for (let i = 0; i < incorrect_answers.length; i++) {
@@ -201,6 +207,7 @@ const theQuestion = () => {
     questionContaier.appendChild(answer);
     console.log(answer);
   }
+  
 }
 
 theQuestion();
@@ -212,7 +219,6 @@ let correct_answer_number = 0;
 const isCorrect = (i) => {
   const btnAnswers = document.querySelectorAll("button:not(#answerConfirm)")[i];
   btnAnswers.classList.add("selected");
-  console.log(btnAnswers);
   if (questions[i].incorrect_answers[i] === btnAnswers.innerText) {
     incorrect_answers_number++;
     console.log(incorrect_answers_number);
@@ -223,21 +229,30 @@ const isCorrect = (i) => {
     console.log(correct_answers_number);
     localStorage.setItem(correct_answers_number, "Risposta Corretta");
   }
+  numberQuestion++;
 }
 
-const whichAnswer = () => {
-  let questionHTML = document.getElementById("question");
-  const questionRand = randomQuestion();
-  questionHTML.innerText = questions[questionRand].question;
-}
+console.log(flagStateRandom);
 
 const nextQuestions = () => {
-  flagStateRandom = true;
-  whichAnswer();
-  theQuestion();
+   for(let i= 0; i < arraySubmitAnswers.length; i++) {
+     if(arraySubmitAnswers.includes(randomNumber)) {
+         flagStateRandom = true;
+          randomQuestion();   
+          console.log("YES");
+          console.log(questions[i].incorrect_answers.length);
+     }
+     else if(numberQuestion == questions[i].incorrect_answers){
+          location.href = 'result.html';
+     }
+     else {
+        
+         console.log(randomNumber);
+         console.log("NO !");
+         
+     }
+  }
 }
-
-whichAnswer();
 
 const resetAllAnswers = () => {
   document.querySelectorAll("button:not(#answerConfirm)").forEach((element) => {
@@ -245,12 +260,11 @@ const resetAllAnswers = () => {
   });
 }
 
-document.getElementById("answerConfirm").addEventListener('click',function(e) {
-   e.preventDefault();
-   resetAllAnswers();
-   nextQuestions();
-   numberQuestion++;
-   document.getElementById("numberQuestion").innerText = numberQuestion;
+document.getElementById("answerConfirm").addEventListener('click', function (e) {
+  e.preventDefault();
+  resetAllAnswers();
+  nextQuestions();
+  theQuestion();
+  document.getElementById("numberQuestion").innerText = numberQuestion;
 });
-
 
