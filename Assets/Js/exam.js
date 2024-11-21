@@ -177,8 +177,8 @@ let numberQuestion = 1;
 const arraySubmitAnswers = [];
 
 function randomQuestion() {
-  flagStateRandom = flagStateRandom ? randomNumber = Math.floor((Math.random() * questions.length) + 0) : false;
-  //flagStateRandom = randomNumber;
+  flagStateRandom = flagStateRandom ? randomNumber = Math.floor((Math.random() * questions.length)).toFixed() : false;
+  flagStateRandom = randomNumber;
   console.log(flagStateRandom);
   return flagStateRandom;
 }
@@ -187,7 +187,7 @@ randomQuestion();
 
 const theQuestion = () => {
   //PROVA
- // randomQuestion();
+  // randomQuestion();
   const questionHTML = document.getElementById("question");
   questionHTML.innerText = questions[randomNumber].question;
   const questionContaier = document.getElementById("quiz-container");
@@ -207,7 +207,7 @@ const theQuestion = () => {
     questionContaier.appendChild(answer);
     console.log(answer);
   }
-  
+
 }
 
 theQuestion();
@@ -235,23 +235,12 @@ const isCorrect = (i) => {
 console.log(flagStateRandom);
 
 const nextQuestions = () => {
-   for(let i= 0; i < arraySubmitAnswers.length; i++) {
-     if(arraySubmitAnswers.includes(randomNumber)) {
-         flagStateRandom = true;
-          randomQuestion();   
-          console.log("YES");
-          console.log(questions[i].incorrect_answers.length);
-     }
-     else if(numberQuestion == questions[i].incorrect_answers){
-          location.href = 'result.html';
-     }
-     else {
-        
-         console.log(randomNumber);
-         console.log("NO !");
-         
-     }
+  if (arraySubmitAnswers.includes(randomNumber)) {
+    flagStateRandom = true;
+    randomQuestion();
+    nextQuestions();
   }
+
 }
 
 const resetAllAnswers = () => {
@@ -260,11 +249,19 @@ const resetAllAnswers = () => {
   });
 }
 
-document.getElementById("answerConfirm").addEventListener('click', function (e) {
-  e.preventDefault();
+const goToResultPage = () => {
+  if (numberQuestion == questions.length + 1) {
+    location.href = 'result.html';
+  }
+}
+
+document.getElementById("answerConfirm").addEventListener('click', function () {
+  goToResultPage();
   resetAllAnswers();
   nextQuestions();
   theQuestion();
   document.getElementById("numberQuestion").innerText = numberQuestion;
 });
+
+
 
