@@ -19,9 +19,14 @@
     <header id="logo">
 
         <img src="Assets/Images/epicode_logo.png" alt="Logo Epicode" />
-        <div id="timer-right"></div>
+
+
+
         <div class="c-countdown-wrapper">
+
             <canvas id="countdown" width="200" height="200"><span id="timer-right"></span></canvas>
+            <div id="timeriminig"></div>
+
         </div>
 
     </header>
@@ -30,18 +35,22 @@
 
         <div id="quiz-container">
 
-            <h1 id="question"></h1>
+            <h1 id="question">How can I create a <br> <b>checkbox in HTML?</b></h1>
 
+            <div class="options">
+
+            </div>
 
         </div>
-          <button id="answerConfirm">Proceed</button>
+
+        <button type="button" id="answerConfirm" class="btnBlue">PROCEED</button>
 
     </main>
 
     <footer id="questionNumber">
 
         <div>
-            <span>QUESTION NUMBER :</span><p id="numberQuestion">1</p>
+            <p><span id="numberQuestion" class="colored"> / 10</span></p>
         </div>
 
     </footer>
