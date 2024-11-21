@@ -30,16 +30,14 @@ function drawCircle(progress) {
     false
   );
 
-  ctx.strokeStyle = "#3498db";
+  ctx.strokeStyle = "#d20094";
   ctx.lineWidth = 10;
   ctx.stroke();
 }
 
-const timer = 0;
-
 // Funzione per far partire il timer
 function startTimer() {
-  const interval = 1000; // Intervallo di aggiornamento (50 ms)
+  const interval = 50; // Intervallo di aggiornamento (50 ms)
   const totalSteps = (fullTime * 1000) / interval; // Numero totale di aggiornamenti
   let step = 0;
 
@@ -54,15 +52,28 @@ function startTimer() {
     ctx.textAlign = "center";
     ctx.fillText("SECONDS", 100, 78);
     ctx.font = "normal 45px Outfit";
-    ctx.fillText(remainingTime, 100, 118);
+    ctx.fillText(Math.floor(remainingTime), 100, 118);
     ctx.font = "normal 10px Outfit";
-    ctx.fillText('REMAINING', 100, 135)
+    ctx.fillText("REMAINING", 100, 135);
 
     // Fine del timer
     if (remainingTime <= 0) {
       clearInterval(timer);
-      console.log("Timer completato!");
+      startTimer();
+      goToResultPage();
+      resetAllAnswers();
+      nextQuestions();
+      theQuestion();
+      numberQuestion++;
+      document.getElementById("numberQuestion").innerText = numberQuestion;
     }
+
+    document
+      .getElementById("answerConfirm")
+      .addEventListener("click", function (e) {
+        e.preventDefault();
+        clearInterval(timer);
+      });
   }, interval);
 }
 
@@ -174,39 +185,41 @@ let numberQuestion = 1;
 const arraySubmitAnswers = [];
 
 function randomQuestion() {
-  flagStateRandom = flagStateRandom ? randomNumber = Math.floor((Math.random() * questions.length)).toFixed() : false;
+  flagStateRandom = flagStateRandom
+    ? (randomNumber = Math.floor(Math.random() * questions.length).toFixed())
+    : false;
   flagStateRandom = randomNumber;
-  console.log(flagStateRandom);
   return flagStateRandom;
 }
 
 randomQuestion();
 
 const theQuestion = () => {
-  //PROVA
-  // randomQuestion();
-  //startTimer();
+  document.getElementById("answerConfirm").setAttribute("disabled", "true");
   const questionHTML = document.getElementById("question");
   questionHTML.innerText = questions[randomNumber].question;
-  const questionContaier = document.getElementById("quiz-container");
+  const questionContaier = document.getElementById("options");
   const incorrect_answers = questions[randomNumber].incorrect_answers;
   const correct_answer = questions[randomNumber].correct_answer;
   incorrect_answers.push(correct_answer);
   arraySubmitAnswers.push(randomNumber);
   incorrect_answers.sort(() => Math.floor(Math.random() - 0.5));
-  console.log(incorrect_answers);
 
   for (let i = 0; i < incorrect_answers.length; i++) {
-    console.log(i);
-    const answer = document.createElement("button");
-    answer.innerText = incorrect_answers[i];
+    const divOption = document.createElement("label");
+    divOption.classList.add("optionContainer");
+    const radio = document.createElement("input");
+    const answer = document.createElement("div");
     answer.classList.add("option");
-    answer.setAttribute("onclick", `isCorrect(${i})`);
-    questionContaier.appendChild(answer);
-    console.log(answer);
+    divOption.appendChild(radio);
+    radio.setAttribute("type", "radio");
+    radio.setAttribute("name", "option");
+    answer.innerText = incorrect_answers[i];
+    divOption.setAttribute("onclick", `isCorrect(${i})`);
+    divOption.appendChild(answer);
+    questionContaier.appendChild(divOption);
   }
-
-}
+};
 
 theQuestion();
 
@@ -214,22 +227,21 @@ let incorrect_answers_number = 0;
 let correct_answer_number = 0;
 
 const isCorrect = (i) => {
-  const btnAnswers = document.querySelectorAll("button:not(#answerConfirm)")[i];
-  btnAnswers.classList.add("selected");
+  document.getElementById("answerConfirm").removeAttribute("disabled");
+  const btnAnswers = document.querySelectorAll(".option")[i];
+  if (checkProceed.checked === true) {
+    btnAnswers.classList.add("selected");
+  };
+ 
   if (questions[i].incorrect_answers[i] === btnAnswers.innerText) {
     incorrect_answers_number++;
-    console.log(incorrect_answers_number);
     localStorage.setItem(incorrect_answers_number, "Risposta sbagliata");
-  }
-  else if (questions[i].correct_answer === btnAnswers.innerText) {
+  } else if (questions[i].correct_answer === btnAnswers.innerText) {
     correct_answer_number++;
-    console.log(correct_answers_number);
-    localStorage.setItem(correct_answers_number, "Risposta Corretta");
+    localStorage.setItem(correct_answer_number, "Risposta Corretta");
   }
   numberQuestion++;
-}
-
-console.log(flagStateRandom);
+};
 
 const nextQuestions = () => {
   if (arraySubmitAnswers.includes(randomNumber)) {
@@ -237,25 +249,26 @@ const nextQuestions = () => {
     randomQuestion();
     nextQuestions();
   }
-
-}
+};
 
 const resetAllAnswers = () => {
-  document.querySelectorAll("button:not(#answerConfirm)").forEach((element) => {
+  document.querySelectorAll(".optionContainer").forEach((element) => {
     element.remove();
   });
-}
+};
 
 const goToResultPage = () => {
-  if (numberQuestion == questions.length + 1) {
-    location.href = 'result.html';
+  if (numberQuestion == questions.length) {
+    location.href = "result.html";
   }
-}
+};
 
-document.getElementById("answerConfirm").addEventListener('click', function () {
+document.getElementById("answerConfirm").addEventListener("click", function () {
   goToResultPage();
   resetAllAnswers();
   nextQuestions();
   theQuestion();
-  document.getElementById("numberQuestion").innerText = `${numberQuestion}/10`;
+  startTimer();
+  numberQuestion++;
+  document.getElementById("numberQuestion").innerText = numberQuestion;
 });
