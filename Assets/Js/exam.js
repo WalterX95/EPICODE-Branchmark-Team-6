@@ -1,15 +1,28 @@
+resetQuizData();
+const risposteCorrette =
+  JSON.parse(localStorage.getItem("risposteCorrette")) || [];
+const risposteSbagliate =
+  JSON.parse(localStorage.getItem("risposteSbagliate")) || [];
 // Selezione del canvas e configurazione del contesto
 const canvas = document.getElementById("countdown");
 const ctx = canvas.getContext("2d");
 
 // Configurazione del cerchio
 const radius = 60; // Raggio del cerchio
-const fullTime = 60;
+const fullTime = 30; // Durata del timer
 let remainingTime = fullTime;
+
+// Reset delle risposte salvate
+function resetQuizData() {
+  localStorage.setItem("risposteCorrette", JSON.stringify([]));
+  localStorage.setItem("risposteSbagliate", JSON.stringify([]));
+}
+
+// Chiama il reset all'inizio
+resetQuizData();
 
 // Funzione per disegnare il cerchio
 function drawCircle(progress) {
-  // Pulizia del canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Cerchio di sfondo
@@ -29,12 +42,10 @@ function drawCircle(progress) {
     -Math.PI / 2 + 2 * Math.PI * progress,
     false
   );
-
   ctx.strokeStyle = "#d20094";
   ctx.lineWidth = 10;
   ctx.stroke();
 }
-
 
 // Funzione per far partire il timer
 function startTimer() {
@@ -48,32 +59,43 @@ function startTimer() {
     const progress = remainingTime / fullTime; // Progresso percentuale
     drawCircle(progress); // Aggiornamento del cerchio
 
+    // Testo all'interno del cerchio
     ctx.font = "normal 10px Outfit";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
-    ctx.fillText("SECONDS", 100, 78);
-    ctx.font = "normal 45px Outfit";
-    ctx.fillText(Math.floor(remainingTime), 100, 118);
+    ctx.fillText("SECONDS", 100, 70);
+    ctx.font = "normal 50px Outfit";
+    ctx.fillText(Math.floor(remainingTime), 100, 116);
     ctx.font = "normal 10px Outfit";
     ctx.fillText("REMAINING", 100, 135);
 
     // Fine del timer
     if (remainingTime <= 0) {
-      clearInterval(timer);
-      startTimer();
-      resetAllAnswers();
-      if(numberQuestion === questions.length) {
-        location.href = "result.html";
-      }
-      else {
-        nextQuestions();
+      if (arraySubmitAnswers.length < questions.length) {
+        risposteSbagliate.push(questions[randomNumber].question);
+        localStorage.setItem(
+          "risposteSbagliate",
+          JSON.stringify(risposteSbagliate)
+        );
+        clearInterval(timer);
+        startTimer();
+        resetAllAnswers();
+        randomQuestion();
         theQuestion();
         numberQuestion++;
         document.getElementById("numberQuestion").innerText = numberQuestion;
+      } else {
+        risposteSbagliate.push(questions[randomNumber].question);
+        localStorage.setItem(
+          "risposteSbagliate",
+          JSON.stringify(risposteSbagliate)
+        );
+        numberQuestion++;
+        goToResultPage();
       }
-      
     }
 
+    // Fermare il timer quando viene confermata una risposta
     document
       .getElementById("answerConfirm")
       .addEventListener("click", function (e) {
@@ -201,60 +223,78 @@ function randomQuestion() {
 randomQuestion();
 
 const theQuestion = () => {
-
   document.getElementById("answerConfirm").setAttribute("disabled", "true");
   const incorrect_answers = [...questions[randomNumber].incorrect_answers];
   const questionHTML = document.getElementById("question");
   questionHTML.innerText = questions[randomNumber].question;
-  const questionContaier = document.getElementById("quiz-container");
+  const questionContainer = document.getElementById("quiz-container");
   //const incorrect_answers = questions[randomNumber].incorrect_answers;
   const correct_answer = questions[randomNumber].correct_answer;
   incorrect_answers.push(correct_answer);
   arraySubmitAnswers.push(randomNumber);
   incorrect_answers.sort(() => Math.floor(Math.random() - 0.5));
-
-  for (let i = 0; i < incorrect_answers.length; i++) {
-      const answer = document.createElement("button");
-      answer.innerText = incorrect_answers[i];
-      answer.classList.add("option");
-      answer.setAttribute("onclick", `isCorrect(${i})`);
-      questionContaier.appendChild(answer);
-  }
+  /*
+    for (let i = 0; i < incorrect_answers.length; i++) {
+        const answer = document.createElement("button");
+        answer.innerText = incorrect_answers[i];
+        answer.classList.add("option");
+        answer.setAttribute("onclick", `isCorrect(${i})`);
+        questionContaier.appendChild(answer);
+    }
+  */
+    for (let i = 0; i < incorrect_answers.length; i++) {
+    const divOption = document.createElement("label");
+    divOption.classList.add("optionContainer");
+    const radio = document.createElement("input");
+    const option = document.createElement("div");
+    option.classList.add("option");
+    divOption.appendChild(radio);
+    divOption.appendChild(option);
+    radio.setAttribute("type", "radio");
+    radio.setAttribute("name", "option");
+    option.innerText = incorrect_answers[i];
+    divOption.setAttribute("onclick", `isCorrect('${i}')`);
+    questionContainer.appendChild(divOption);
+  };
 };
 
 theQuestion();
 
 let incorrect_answers_number = 0;
 let correct_answer_number = 0;
-const btnAnswerChoise = document.querySelector(".option > .selected");
+let flagQuestion;
+//const btnAnswerChoise = document.querySelector(".option > .selected");
 
-const isSelected = () => {
-  const btnNotAnswers = document.querySelectorAll(".option:not(.selected)");
-  const btnAnswerChoise = document.querySelector(".selected");
-  if (btnAnswerChoise.classList.contains('selected')) {
-      btnNotAnswers.forEach((element) => {
-      element.classList.add("notSelected");  
-      element.setAttribute("disabled", "true");
-      
-    });
+const isSelected = (i) => {
+  const btnNotAnswers = document.querySelectorAll(".option");
+  btnNotAnswers.forEach((element) => {
+    element.classList.remove("selected");
+  });
+  const btnAnswers = document.querySelectorAll("label")[i];
+  btnAnswers.classList.add("selected");
+  if (btnAnswers.classList.contains("selected")) {
+    localStorage.setItem("isCorrect", i);
+  } else {
+    localStorage.removeItem("isCorrect");
   }
 };
 
 const isCorrect = (i) => {
   const InAnswerIncorrect = questions[randomNumber].incorrect_answers;
   const InAnswerCorrect = questions[randomNumber].correct_answer;
+
   document.getElementById("answerConfirm").removeAttribute("disabled");
-  const btnAnswers = document.querySelectorAll("button:not(#answerConfirm)")[i];
-  btnAnswers.classList.add("selected");
-  isSelected();
-  if (InAnswerIncorrect.includes(btnAnswers.innerText)) {
-    incorrect_answers_number++;
-    localStorage.setItem("incorrectAnswer",incorrect_answers_number);
-  } else  if (InAnswerCorrect.includes(btnAnswers.innerText)) {
-    correct_answer_number++;
-    localStorage.setItem("correctAnswer", correct_answer_number);
+  const btnAnswers = document.querySelectorAll("label")[i];
+  isSelected(i);
+
+  if (localStorage.getItem("isCorrect") == i) {
+    if (InAnswerIncorrect.includes(btnAnswers.innerText)) {
+      flagQuestion = false;
+    } else if (InAnswerCorrect.includes(btnAnswers.innerText)) {
+      flagQuestion = true;
+    }
   }
-  numberQuestion++;
+  localStorage.removeItem("isCorrect");
 };
 
 const nextQuestions = () => {
@@ -266,22 +306,34 @@ const nextQuestions = () => {
 };
 
 const resetAllAnswers = () => {
-  document.querySelectorAll("button:not(#answerConfirm)").forEach((element) => {
+  document.querySelectorAll("label").forEach((element) => {
     element.remove();
   });
 };
 
 const goToResultPage = () => {
-  if (numberQuestion == questions.length + 1 || arraySubmitAnswers.length === questions.length + 1) {
+  if (
+    numberQuestion === questions.length + 1 ||
+    arraySubmitAnswers.length === questions.length
+  ) {
     location.href = "result.html";
   }
 };
 
 document.getElementById("answerConfirm").addEventListener("click", function () {
+  if (flagQuestion) {
+    correct_answer_number++;
+
+    localStorage.setItem("correctAnswer", correct_answer_number);
+  } else {
+    incorrect_answers_number++;
+    localStorage.setItem("incorrectAnswer", incorrect_answers_number);
+  }
   startTimer();
   goToResultPage();
   resetAllAnswers();
   nextQuestions();
   theQuestion();
+  numberQuestion++;
   document.getElementById("numberQuestion").innerText = numberQuestion;
 });

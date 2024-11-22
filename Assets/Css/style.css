@@ -29,7 +29,7 @@ h3 {
 
 #logo img {
   width: 10vw;
-  margin: 3em 0 ;
+  margin: 3em 0;
 }
 
 .btnBlue {
@@ -46,14 +46,17 @@ h3 {
 
 #proceed,
 #check,
-.check,
-#results section {
+.check, #graphic, #myChart {
   display: flex;
   align-items: center;
+  align-content: center;
   justify-content: space-between;
 }
 
-
+input[type="checkbox"], .optionContainer input, .visibility  {
+  visibility: hidden;
+  display: none;
+}
 
 /* ----- Welcome page ----- */
 
@@ -92,11 +95,6 @@ h3 {
   width: 100%;
 }
 
-input[type="checkbox"] {
-  visibility: hidden;
-  display: none;
-}
-
 #check {
   cursor: pointer;
 }
@@ -111,6 +109,7 @@ input[type="checkbox"] {
   height: 25px;
   background-color: #d20094;
   border-radius: 5px;
+  transform: rotate(90deg);
 }
 
 .checkmark {
@@ -119,7 +118,7 @@ input[type="checkbox"] {
   height: 20px;
   border: 3px solid white;
   border-radius: 5px;
-  transition: all 0.375s;
+  transition: all 0.4s;
 }
 
 #proceed button {
@@ -161,43 +160,39 @@ input[type="checkbox"] {
 }
 
 #question {
-  font-size: 3.5em;
+  font-size: 3.2em;
   font-weight: normal;
   margin-bottom: 1.5em;
 }
 
 .option {
-  min-width: 450px;
-  height: 5em;
-  margin: 2em;
+  display: inline-block;
+  padding: 26px;
+  width: 20em;
+  height: 80px;
+  margin: 2em 2em;
   border: transparent;
   border-radius: 40px;
   box-shadow: 3px -1px 3px white, -2px -2px 3px white;
   background-color: rgb(255, 255, 255, 10%);
   color: white;
-  font-size: 1em;
+  font-size: 1.3em;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
 .option:hover {
-  background-color: #d20094;
+  background-color: rgb(210, 0, 147, 80%);
 }
 
-.selected {
+.optionContainer input:checked ~ div {
   border: 3px solid #d20094;
   border-bottom: 3px;
   box-shadow: 3px -1px 4px #d20094, -2px -2px 4px #d20094;
-  box-sizing: border-box;
-}
-
-.notSelected {
-  border: 3px solid #000000;
-  border-bottom: 3px;
-  box-shadow: 3px -1px 4px #000000, -2px -2px 4px #d20094;
-  box-sizing: border-box;
 }
 
 #answerConfirm {
-  margin-top: 2em;
+  margin: 2em 0;
   border-radius: 10px;
 }
 
@@ -231,27 +226,18 @@ input[type="checkbox"] {
   margin-bottom: 20px;
 }
 
-#results section {
-  font-size: 2em;
-  justify-content: space-around;
-  margin-top: -30px;
-}
-
 #correct,
 #wrong {
   line-height: 0;
+  width: 3.5em;
+}
+
+#correct {
+  text-align: left;
 }
 
 #wrong {
   text-align: right;
-}
-
-.data-result {
-  text-align: left;
-  width: 5em;
-  font-size: xxx-large;
-  position: relative;
-  top: 2em;
 }
 
 #percentageCorrect,
@@ -264,23 +250,12 @@ input[type="checkbox"] {
   font-size: 0.4em;
 }
 
-#graphic {                               
-  font-family: "Roboto", serif;
-  width: 20em;
-  height: 400px;
-  flex-direction: column;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: -0.3em;
-  margin: 0 auto;
-  position: relative;
-  bottom: 4em;
+#graphic {
+  font-size: 2em;
+  
 }
-
-#graphic div {
-    margin: 80px 0 0 42px;
-    width: 100%;
+#graphic, #resultChart {
+  margin: 0 auto;
 }
 
 #text {
@@ -289,18 +264,11 @@ input[type="checkbox"] {
 }
 
 #result {
-  width: 80%;
   font-weight: bold;
 }
 
-#resultText {
-  width: 80%;
-  font-size: 0.6em;
-  margin-top: 3em;
-}
-
-.btnResult {
-  margin: 2.5em 0 3.5em 38px;
+.btnResult{
+  margin: 2em 1em;
   width: 280px;
   height: 90px;
   background-color: transparent;
@@ -311,8 +279,6 @@ input[type="checkbox"] {
   cursor: pointer;
   border-radius: 5px;
 }
-
-
 
 /* ----- Feedback page ----- */
 
@@ -361,18 +327,4 @@ input[type="checkbox"] {
 
 #feedback button {
   margin: 3em 0;
-}
-
-.epicode {
-    margin-top: 4em;
-}
-
-.link{
-    color: white;
-    text-decoration: none;
-}
-
-.link img {
-    width: 100px;
-    margin-left: 3px;
 }

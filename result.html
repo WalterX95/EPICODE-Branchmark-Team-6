@@ -12,58 +12,51 @@
         rel="stylesheet">
     <link rel="icon" href="Assets/Images/icon.jpg">
     <link rel="stylesheet" href="Assets/Css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Libreria Chart.js -->
 </head>
 
 <body>
 
     <header id="logo">
-
         <img src="Assets/Images/epicode_logo.png" alt="Logo Epicode" />
-
     </header>
 
     <main id="results">
-
         <h1>Results</h1>
+        <p id="summary">The summary of your answers:</p>
 
-        <p id="summary">The summary of your answer:</p>
-        <div id="correct" class="data-result">
-            <p>Correct</p>
-            <p id="percentageCorrect">60%</p>
-            <p id="questionsCorrect">4/6 questions</p>
-        </div>
+        <!-- Grafico -->
+
         <div id="graphic">
-            <div id="wrong" class="data-result">
-                <p>Wrong</p>
-                <p id="percentageWrong">40%</p>
-                <p id="questionsWrong">2/6 questions</p>
+            <div id="correct">
+                <p>Correct</p>
+                <p id="percentageCorrect"></p>
+                <p id="questionsCorrect"></p>
             </div>
-            <canvas id="resultChart">
+
+            <div id="myChart" style="width: 40%;">
+                <canvas id="resultChart"></canvas>
+            </div>
+
+            <div id="wrong">
+                <p>Wrong</p>
+                <p id="percentageWrong"></p>
+                <p id="questionsWrong"></p>
+            </div>
         </div>
+
         <section>
-          
-           
-                <p id="result">Congratulations!<br><strong id="text">You passed the exam.</strong></p>
-                    <p id="resultText">
-                        We'll send you the certificate in few minutes. <br>
-                        Check your email (including promotions / spam folder)
-                    </p>
 
         </section>
 
-
         <button id="rate" class="btnResult">RATE US</button>
         <button id="regame" class="btnResult">TRY AGAIN</button>
-        
+
     </main>
 
-    <footer class="footers">
 
-    </footer>
-     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="Assets/Js/result.js"></script>
-    
+    <script src="Assets/Js/result.js"></script> <!-- File JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 </body>
 
 </html>
