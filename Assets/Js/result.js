@@ -2,16 +2,16 @@ document.getElementById('rate').addEventListener('click', function () {
     location.href = 'feedback.html'
 });
 
+document.getElementById('regame').addEventListener('click', function () {
+  localStorage.removeItem("correctAnswer");
+  localStorage.removeItem("incorrectAnswer");
+  location.href = 'exam.html';
+});
+
+
 // Recupera le risposte salvate
 const correctAnswer = parseInt(localStorage.getItem("correctAnswer"));
 const incorrectAnswer = parseInt(localStorage.getItem("incorrectAnswer"));
-
-// Calcola i totali
-/*const totalCorrect = ;
-const totalWrong = incorrectAnswer.length;*/
-
-// Evita di contare le domande duplicate
-//const totalQuestions = new Set([...correctAnswer, ...incorrectAnswer]).size;
 
 const totalQuestions = correctAnswer + incorrectAnswer;
 // Calcola le percentuali
@@ -30,6 +30,18 @@ if (totalQuestions === 0) {
 
   document.getElementById("percentageWrong").innerText = `${percentageWrong}%`;
   document.getElementById("questionsWrong").innerText = `${incorrectAnswer}/${totalQuestions} questions`;
+}
+
+if(percentageCorrect > 50) {
+   document.querySelector("section").innerHTML =`<p id="result">Congratulations!<br><strong id="text">You passed the exam.</strong></p>
+                                                  <p id="resultText">
+                                                  We'll send you the certificate in few minutes. <br>
+                                                  Check your email (including promotions / spam folder)
+                                                  </p>`;
+}
+else {
+  document.querySelector("section").innerHTML =`<p id="result">OPS!<br><strong id="text">You don't pass the exam.</strong></p>
+  <p id="resultText"> Chek or Try Agani Quiz</p>`;
 }
 
   

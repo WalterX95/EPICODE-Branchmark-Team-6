@@ -27,39 +27,34 @@
         <h1>Results</h1>
 
         <p id="summary">The summary of your answer:</p>
-
-        <section>
-            <div id="correct">
-
-                <p>Correct</p>
-                <p id="percentageCorrect">60%</p>
-                <p id="questionsCorrect">4/6 questions</p>
-
+        <div id="correct" class="data-result">
+            <p>Correct</p>
+            <p id="percentageCorrect">60%</p>
+            <p id="questionsCorrect">4/6 questions</p>
+        </div>
+        <div id="graphic">
+            <div id="wrong" class="data-result">
+                <p>Wrong</p>
+                <p id="percentageWrong">40%</p>
+                <p id="questionsWrong">2/6 questions</p>
             </div>
-            <div id="graphic">
             <canvas id="resultChart">
-            </div>
-            
-                <div>
-
-                    <p id="result">Congratulations!<br><strong id="text">You passed the exam.</strong></p>
+        </div>
+        <section>
+          
+           
+                <p id="result">Congratulations!<br><strong id="text">You passed the exam.</strong></p>
                     <p id="resultText">
                         We'll send you the certificate in few minutes. <br>
                         Check your email (including promotions / spam folder)
                     </p>
 
-                </div>
-            <div id="wrong">
-
-                <p>Wrong</p>
-                <p id="percentageWrong">40%</p>
-                <p id="questionsWrong">2/6 questions</p>
-
-            </div>
         </section>
 
 
-        <button id="rate">RATE US</button>
+        <button id="rate" class="btnResult">RATE US</button>
+        <button id="regame" class="btnResult">TRY AGAIN</button>
+        
     </main>
 
     <footer class="footers">

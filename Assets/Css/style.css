@@ -242,12 +242,16 @@ input[type="checkbox"] {
   line-height: 0;
 }
 
-#correct {
-  text-align: left;
-}
-
 #wrong {
   text-align: right;
+}
+
+.data-result {
+  text-align: left;
+  width: 5em;
+  font-size: xxx-large;
+  position: relative;
+  top: 2em;
 }
 
 #percentageCorrect,
@@ -260,17 +264,18 @@ input[type="checkbox"] {
   font-size: 0.4em;
 }
 
-#graphic {                                /* Da Commentare */
-  width: 50vw;
-  height: 50vh;
-  border-radius: 10px;
-  padding: 20px;
+#graphic {                               
+  font-family: "Roboto", serif;
+  width: 20em;
+  height: 400px;
+  flex-direction: column;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-canvas {
-  display: block;
+  margin-top: -0.3em;
+  margin: 0 auto;
+  position: relative;
+  bottom: 4em;
 }
 
 #graphic div {
@@ -294,7 +299,7 @@ canvas {
   margin-top: 3em;
 }
 
-#rate {
+.btnResult {
   margin: 2.5em 0 3.5em 38px;
   width: 280px;
   height: 90px;
@@ -306,6 +311,8 @@ canvas {
   cursor: pointer;
   border-radius: 5px;
 }
+
+
 
 /* ----- Feedback page ----- */
 
@@ -368,9 +375,4 @@ canvas {
 .link img {
     width: 100px;
     margin-left: 3px;
-}
-
-#resultChart {
-  height: 20em;
-  width: 20em;
 }
