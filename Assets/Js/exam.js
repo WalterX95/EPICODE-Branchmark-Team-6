@@ -35,6 +35,7 @@ function drawCircle(progress) {
   ctx.stroke();
 }
 
+
 // Funzione per far partire il timer
 function startTimer() {
   const interval = 50; // Intervallo di aggiornamento (50 ms)
@@ -60,12 +61,17 @@ function startTimer() {
     if (remainingTime <= 0) {
       clearInterval(timer);
       startTimer();
-      goToResultPage();
       resetAllAnswers();
-      nextQuestions();
-      theQuestion();
-      numberQuestion++;
-      document.getElementById("numberQuestion").innerText = numberQuestion;
+      if(numberQuestion === questions.length) {
+        location.href = "result.html";
+      }
+      else {
+        nextQuestions();
+        theQuestion();
+        numberQuestion++;
+        document.getElementById("numberQuestion").innerText = numberQuestion;
+      }
+      
     }
 
     document
@@ -195,29 +201,24 @@ function randomQuestion() {
 randomQuestion();
 
 const theQuestion = () => {
+
   document.getElementById("answerConfirm").setAttribute("disabled", "true");
+  const incorrect_answers = [...questions[randomNumber].incorrect_answers];
   const questionHTML = document.getElementById("question");
   questionHTML.innerText = questions[randomNumber].question;
-  const questionContaier = document.getElementById("options");
-  const incorrect_answers = questions[randomNumber].incorrect_answers;
+  const questionContaier = document.getElementById("quiz-container");
+  //const incorrect_answers = questions[randomNumber].incorrect_answers;
   const correct_answer = questions[randomNumber].correct_answer;
   incorrect_answers.push(correct_answer);
   arraySubmitAnswers.push(randomNumber);
   incorrect_answers.sort(() => Math.floor(Math.random() - 0.5));
 
   for (let i = 0; i < incorrect_answers.length; i++) {
-    const divOption = document.createElement("label");
-    divOption.classList.add("optionContainer");
-    const radio = document.createElement("input");
-    const answer = document.createElement("div");
-    answer.classList.add("option");
-    divOption.appendChild(radio);
-    radio.setAttribute("type", "radio");
-    radio.setAttribute("name", "option");
-    answer.innerText = incorrect_answers[i];
-    divOption.setAttribute("onclick", `isCorrect(${i})`);
-    divOption.appendChild(answer);
-    questionContaier.appendChild(divOption);
+      const answer = document.createElement("button");
+      answer.innerText = incorrect_answers[i];
+      answer.classList.add("option");
+      answer.setAttribute("onclick", `isCorrect(${i})`);
+      questionContaier.appendChild(answer);
   }
 };
 
@@ -225,20 +226,33 @@ theQuestion();
 
 let incorrect_answers_number = 0;
 let correct_answer_number = 0;
+const btnAnswerChoise = document.querySelector(".option > .selected");
+
+const isSelected = () => {
+  const btnNotAnswers = document.querySelectorAll(".option:not(.selected)");
+  const btnAnswerChoise = document.querySelector(".selected");
+  if (btnAnswerChoise.classList.contains('selected')) {
+      btnNotAnswers.forEach((element) => {
+      element.classList.add("notSelected");  
+      element.setAttribute("disabled", "true");
+      
+    });
+  }
+};
 
 const isCorrect = (i) => {
+  const InAnswerIncorrect = questions[randomNumber].incorrect_answers;
+  const InAnswerCorrect = questions[randomNumber].correct_answer;
   document.getElementById("answerConfirm").removeAttribute("disabled");
-  const btnAnswers = document.querySelectorAll(".option")[i];
-  if (checkProceed.checked === true) {
-    btnAnswers.classList.add("selected");
-  };
- 
-  if (questions[i].incorrect_answers[i] === btnAnswers.innerText) {
+  const btnAnswers = document.querySelectorAll("button:not(#answerConfirm)")[i];
+  btnAnswers.classList.add("selected");
+  isSelected();
+  if (InAnswerIncorrect.includes(btnAnswers.innerText)) {
     incorrect_answers_number++;
-    localStorage.setItem(incorrect_answers_number, "Risposta sbagliata");
-  } else if (questions[i].correct_answer === btnAnswers.innerText) {
+    localStorage.setItem("incorrectAnswer",incorrect_answers_number);
+  } else  if (InAnswerCorrect.includes(btnAnswers.innerText)) {
     correct_answer_number++;
-    localStorage.setItem(correct_answer_number, "Risposta Corretta");
+    localStorage.setItem("correctAnswer", correct_answer_number);
   }
   numberQuestion++;
 };
@@ -252,23 +266,22 @@ const nextQuestions = () => {
 };
 
 const resetAllAnswers = () => {
-  document.querySelectorAll(".optionContainer").forEach((element) => {
+  document.querySelectorAll("button:not(#answerConfirm)").forEach((element) => {
     element.remove();
   });
 };
 
 const goToResultPage = () => {
-  if (numberQuestion == questions.length) {
+  if (numberQuestion == questions.length + 1 || arraySubmitAnswers.length === questions.length + 1) {
     location.href = "result.html";
   }
 };
 
 document.getElementById("answerConfirm").addEventListener("click", function () {
+  startTimer();
   goToResultPage();
   resetAllAnswers();
   nextQuestions();
   theQuestion();
-  startTimer();
-  numberQuestion++;
   document.getElementById("numberQuestion").innerText = numberQuestion;
 });
